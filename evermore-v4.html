@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EverMore — You don't have to grieve alone</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sea-moss: #7A8C6E;
+    --sea-moss-light: #9aab8c;
+    --sea-moss-pale: #eef2ec;
+    --branch: #8B8B5A;
+    --vintage: #E8E0D0;
+    --vintage-dark: #d4c9b5;
+    --deep-dive: #4A7C7E;
+    --redwood: #8B4A2F;
+    --redwood-light: #a85c3a;
+    --redwood-pale: #f5ede8;
+    --cream: #F6F1E9;
+    --bark: #2E2018;
+    --text-mid: #6B5D52;
+    --text-soft: #9A8E84;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--cream);
+    color: var(--bark);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* ---- NAV ---- */
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 40px;
+    gap: 10px;
+  }
+  .nav-heart { color: var(--redwood); font-size: 20px; }
+  .nav-logo {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--bark);
+    letter-spacing: 0.04em;
+  }
+  .nav-logo span { color: var(--redwood); }
+
+  /* ---- SHARED BUTTONS ---- */
+  .btn-primary {
+    background: var(--redwood);
+    color: white;
+    border: none;
+    padding: 16px 40px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.25s ease;
+  }
+  .btn-primary:hover { background: var(--redwood-light); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(139,74,47,0.28); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--bark);
+    border: 1.5px solid rgba(46,32,24,0.3);
+    padding: 16px 40px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.25s ease;
+  }
+  .btn-secondary:hover { border-color: var(--sea-moss); color: var(--sea-moss); transform: translateY(-1px); }
+
+  .btn-continue {
+    background: var(--redwood);
+    color: white;
+    border: none;
+    padding: 13px 30px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.25s ease;
+  }
+  .btn-continue:hover { background: var(--redwood-light); transform: translateY(-1px); }
+
+  .btn-back {
+    background: none;
+    border: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-soft);
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    padding: 8px 0;
+    transition: color 0.2s;
+  }
+  .btn-back:hover { color: var(--bark); }
+
+  /* ===================== LANDING ===================== */
+  #landing {
+    background: linear-gradient(155deg, #f0f3ee 0%, #ece5d8 45%, #e2d8c8 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .orb { position: absolute; border-radius: 50%; pointer-events: none; }
+  .orb-1 { width: 420px; height: 420px; background: radial-gradient(circle, rgba(122,140,110,0.1) 0%, transparent 70%); top: -100px; right: -80px; }
+  .orb-2 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(139,74,47,0.07) 0%, transparent 70%); bottom: 40px; left: -60px; }
+  .orb-3 { width: 200px; height: 200px; background: radial-gradient(circle, rgba(74,124,126,0.08) 0%, transparent 70%); top: 38%; right: 12%; }
+
+  .landing-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 24px 100px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .landing-eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--redwood);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.2s;
+  }
+
+  .landing-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(56px, 9vw, 98px);
+    font-weight: 300;
+    line-height: 1.0;
+    color: var(--bark);
+    margin-bottom: 0;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.35s;
+  }
+  .landing-headline em { font-style: italic; color: var(--sea-moss); }
+
+  .landing-rule {
+    width: 44px; height: 2px;
+    background: var(--redwood);
+    margin: 28px auto;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.55s;
+  }
+
+  .landing-sub {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.85;
+    color: var(--text-mid);
+    max-width: 400px;
+    margin: 0 auto 44px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.65s;
+  }
+
+  .landing-ctas {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.8s;
+  }
+
+  .landing-quote {
+    position: absolute;
+    bottom: 42px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: rgba(46,32,24,0.28);
+    letter-spacing: 0.08em;
+  }
+
+  /* ===================== ONBOARDING ===================== */
+  #onboarding { background: linear-gradient(170deg, #eef2ec 0%, #e8e0d0 100%); }
+
+  .onboarding-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 24px 60px;
+  }
+
+  .step-indicator { display: flex; gap: 10px; margin-bottom: 32px; align-items: center; }
+  .step-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--vintage-dark); transition: all 0.3s ease; }
+  .step-dot.active { background: var(--redwood); transform: scale(1.35); }
+  .step-dot.done { background: var(--sea-moss-light); }
+
+  .form-card {
+    background: rgba(255,255,255,0.62);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.85);
+    border-radius: 3px;
+    padding: 44px;
+    width: 100%;
+    max-width: 520px;
+    box-shadow: 0 8px 48px rgba(46,32,24,0.07);
+    animation: fadeUp 0.45s ease forwards;
+  }
+
+  .form-step { display: none; }
+  .form-step.active { display: block; }
+
+  .form-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 34px;
+    font-weight: 400;
+    color: var(--bark);
+    margin-bottom: 4px;
+    line-height: 1.15;
+  }
+  .form-subtitle { font-size: 12px; font-weight: 300; color: var(--text-soft); margin-bottom: 30px; }
+
+  .field-group { margin-bottom: 20px; }
+  .field-label {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sea-moss);
+    margin-bottom: 7px;
+  }
+  .field-label span { color: var(--redwood); }
+
+  .field-input, .field-select, .field-textarea {
+    width: 100%;
+    padding: 13px 15px;
+    background: rgba(232,224,208,0.28);
+    border: 1px solid rgba(122,140,110,0.22);
+    border-radius: 2px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--bark);
+    outline: none;
+    transition: all 0.2s ease;
+    -webkit-appearance: none;
+  }
+  .field-input::placeholder, .field-textarea::placeholder { color: #b8aca2; }
+  .field-input:focus, .field-select:focus, .field-textarea:focus {
+    border-color: var(--sea-moss);
+    background: rgba(232,224,208,0.45);
+    box-shadow: 0 0 0 3px rgba(122,140,110,0.08);
+  }
+  .field-textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+
+  .form-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; }
+
+  .optional-badge {
+    display: inline-block;
+    font-size: 9px; font-weight: 600; letter-spacing: 0.12em;
+    color: var(--text-soft); background: rgba(122,140,110,0.1);
+    padding: 3px 8px; border-radius: 20px; margin-left: 8px;
+    text-transform: uppercase; vertical-align: middle;
+  }
+
+  .data-note {
+    background: rgba(139,74,47,0.05);
+    border-left: 2.5px solid var(--redwood);
+    padding: 14px 16px;
+    border-radius: 0 2px 2px 0;
+    margin-bottom: 22px;
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--text-mid);
+    line-height: 1.7;
+  }
+  .data-note strong { font-weight: 600; color: var(--bark); }
+
+  .onboarding-fwd {
+    background: rgba(122,140,110,0.07);
+    border-radius: 2px;
+    padding: 14px 16px;
+    margin-top: 8px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+
+  /* ===================== WISHLIST BUILDER ===================== */
+  #wishlist-builder { background: linear-gradient(160deg, #edf0ec 0%, #e4ddd0 100%); }
+
+  .wishlist-header { text-align: center; padding: 0 24px 24px; max-width: 1100px; margin: 0 auto; width: 100%; }
+  .wishlist-greeting { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 300; color: var(--bark); margin-bottom: 8px; }
+  .wishlist-greeting em { font-style: italic; color: var(--sea-moss); }
+  .wishlist-desc { font-size: 13px; font-weight: 300; color: var(--text-mid); line-height: 1.75; max-width: 540px; margin: 0 auto; }
+
+  .wishlist-layout {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 0;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+    align-items: start;
+  }
+
+  .task-categories { padding-right: 32px; }
+  .category-section { margin-bottom: 26px; }
+  .category-title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--sea-moss); margin-bottom: 12px; padding-bottom: 10px;
+    border-bottom: 1px solid rgba(122,140,110,0.18);
+  }
+
+  .task-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .task-chip {
+    display: flex; align-items: center; gap: 6px;
+    padding: 9px 15px;
+    background: rgba(255,255,255,0.58);
+    border: 1px solid rgba(122,140,110,0.2);
+    border-radius: 2px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px; font-weight: 300; color: var(--bark);
+    cursor: pointer; transition: all 0.2s ease; user-select: none;
+  }
+  .task-chip:hover { background: rgba(122,140,110,0.1); border-color: var(--sea-moss); }
+  .task-chip.selected { background: var(--sea-moss); color: white; border-color: var(--sea-moss); }
+
+  /* Smart defaults panel */
+  .task-detail-panel {
+    display: none;
+    background: rgba(255,255,255,0.72);
+    border: 1px solid rgba(122,140,110,0.2);
+    border-left: 3px solid var(--sea-moss);
+    border-radius: 0 3px 3px 0;
+    padding: 20px;
+    margin: 10px 0 16px;
+    animation: fadeUp 0.25s ease;
+  }
+  .task-detail-panel.visible { display: block; }
+
+  .panel-header { margin-bottom: 14px; }
+  .panel-task-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; font-weight: 400; font-style: italic; color: var(--bark);
+    margin-bottom: 4px;
+  }
+  .panel-prefill-note {
+    font-size: 11px; font-weight: 300; color: var(--text-soft); line-height: 1.6;
+  }
+  .panel-prefill-note strong { font-weight: 600; color: var(--sea-moss); }
+
+  /* Pre-filled supporter script */
+  .supporter-script {
+    background: rgba(122,140,110,0.06);
+    border: 1px solid rgba(122,140,110,0.15);
+    border-radius: 2px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--text-mid);
+    line-height: 1.7;
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+  }
+  .supporter-script-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--sea-moss); margin-bottom: 6px; font-style: normal;
+    display: block;
+  }
+
+  .detail-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .detail-field label {
+    display: block; font-size: 10px; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--sea-moss); margin-bottom: 6px;
+  }
+  .detail-field input, .detail-field select {
+    width: 100%;
+    padding: 9px 12px;
+    background: rgba(232,224,208,0.3);
+    border: 1px solid rgba(122,140,110,0.2);
+    border-radius: 2px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px; font-weight: 300; color: var(--bark);
+    outline: none; -webkit-appearance: none;
+  }
+  .detail-field input:focus, .detail-field select:focus { border-color: var(--sea-moss); }
+
+  .panel-actions { display: flex; gap: 8px; margin-top: 14px; }
+  .btn-save-detail {
+    flex: 1; padding: 11px 16px;
+    background: var(--redwood); color: white; border: none; border-radius: 2px;
+    font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; transition: background 0.2s;
+  }
+  .btn-save-detail:hover { background: var(--redwood-light); }
+  .btn-skip-detail {
+    padding: 11px 16px;
+    background: transparent; border: 1px solid var(--vintage-dark);
+    color: var(--text-soft); border-radius: 2px;
+    font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-skip-detail:hover { border-color: var(--sea-moss); color: var(--sea-moss); }
+
+  .add-custom {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px;
+    background: rgba(232,224,208,0.4);
+    border: 1px dashed rgba(139,74,47,0.3);
+    border-radius: 2px; cursor: pointer; transition: all 0.2s ease; margin-top: 12px;
+  }
+  .add-custom:hover { background: rgba(139,74,47,0.06); border-color: var(--redwood); }
+
+  .custom-input-row { display: none; flex-direction: column; gap: 8px; margin-top: 8px; }
+  .custom-input-row.visible { display: flex; }
+  .custom-input-top { display: flex; gap: 8px; }
+  .custom-input-row input {
+    flex: 1; padding: 10px 14px;
+    background: rgba(232,224,208,0.4);
+    border: 1px solid rgba(122,140,110,0.25); border-radius: 2px;
+    font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 300; color: var(--bark);
+    outline: none;
+  }
+  .custom-input-row input:focus { border-color: var(--sea-moss); }
+  .btn-add-task {
+    padding: 10px 18px; background: var(--redwood); color: white; border: none; border-radius: 2px;
+    font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.14em; cursor: pointer; text-transform: uppercase; transition: background 0.2s; white-space: nowrap;
+  }
+  .btn-add-task:hover { background: var(--redwood-light); }
+
+  /* Sidebar */
+  .wishlist-sidebar {
+    position: sticky; top: 20px;
+    background: rgba(255,255,255,0.62);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.85);
+    border-radius: 3px; padding: 28px;
+    box-shadow: 0 8px 40px rgba(46,32,24,0.06);
+  }
+  .sidebar-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 400; color: var(--bark); margin-bottom: 2px; }
+  .sidebar-count { font-size: 11px; font-weight: 300; color: var(--text-soft); margin-bottom: 16px; }
+
+  .selected-tasks { min-height: 90px; }
+  .selected-task-item { padding: 10px 0; border-bottom: 1px solid rgba(122,140,110,0.1); animation: fadeUp 0.25s ease; }
+  .selected-task-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 4px; }
+  .selected-task-name { font-size: 12px; font-weight: 500; color: var(--bark); line-height: 1.4; }
+  .selected-task-meta { font-size: 11px; font-weight: 300; color: var(--text-soft); margin-top: 3px; font-style: italic; font-family: 'Cormorant Garamond', serif; }
+  .remove-task { background: none; border: none; color: var(--redwood); cursor: pointer; font-size: 16px; line-height: 1; padding: 2px 4px; opacity: 0.5; transition: opacity 0.2s; flex-shrink: 0; }
+  .remove-task:hover { opacity: 1; }
+  .sidebar-empty { color: #b0a496; font-size: 15px; font-style: italic; font-family: 'Cormorant Garamond', serif; text-align: center; padding: 20px 0; line-height: 1.7; }
+
+  .btn-generate {
+    width: 100%; background: var(--redwood); color: white; border: none; padding: 16px;
+    font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; border-radius: 2px;
+    margin-top: 18px; transition: all 0.25s ease;
+  }
+  .btn-generate:hover { background: var(--redwood-light); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(139,74,47,0.22); }
+  .btn-generate:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  /* ===================== WISHLIST PAGE ===================== */
+  #wishlist-page { background: linear-gradient(160deg, #f0f3ee 0%, #e8e0d0 100%); }
+  .wishlist-page-content { flex: 1; max-width: 680px; margin: 0 auto; padding: 0 24px 80px; width: 100%; }
+
+  .supporter-banner {
+    background: rgba(74,124,126,0.07);
+    border: 1px solid rgba(74,124,126,0.18);
+    border-left: 3px solid var(--deep-dive);
+    border-radius: 0 2px 2px 0; padding: 18px 22px; margin-bottom: 32px;
+  }
+  .supporter-banner p { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-style: italic; font-weight: 300; color: var(--deep-dive); line-height: 1.65; }
+
+  .wishlist-page-title { font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 300; color: var(--bark); margin-bottom: 6px; line-height: 1.1; }
+  .wishlist-page-title em { font-style: italic; color: var(--sea-moss); }
+  .wishlist-page-sub { font-size: 13px; font-weight: 300; color: var(--text-mid); margin-bottom: 24px; }
+
+  .share-bar {
+    display: flex; align-items: center; gap: 0;
+    margin-bottom: 32px;
+    background: rgba(255,255,255,0.5); border: 1px solid rgba(122,140,110,0.2); border-radius: 2px;
+    overflow: hidden;
+  }
+  .share-link { flex: 1; background: none; border: none; padding: 13px 16px; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 300; color: var(--text-soft); outline: none; cursor: text; }
+  .btn-copy { padding: 13px 20px; background: var(--redwood); color: white; border: none; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; transition: all 0.25s; white-space: nowrap; }
+  .btn-copy:hover { background: var(--redwood-light); }
+  .btn-copy.copied { background: var(--sea-moss); }
+
+  .task-cards { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+  .task-card {
+    background: rgba(255,255,255,0.62);
+    backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.85);
+    border-radius: 3px; padding: 18px 22px;
+    transition: all 0.2s ease; box-shadow: 0 2px 10px rgba(46,32,24,0.04);
+  }
+  .task-card:not(.claimed):hover { transform: translateY(-1px); box-shadow: 0 4px 18px rgba(46,32,24,0.09); }
+  .task-card.claimed { opacity: 0.6; }
+
+  .task-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .task-card-info { flex: 1; }
+  .task-card-name { font-size: 14px; font-weight: 600; color: var(--bark); margin-bottom: 4px; }
+  .task-card-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 6px; }
+  .task-card-category { font-size: 10px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sea-moss); }
+  .task-card-time { font-size: 12px; font-weight: 300; color: var(--text-soft); font-style: italic; font-family: 'Cormorant Garamond', serif; }
+  .task-claimed-by { font-size: 12px; color: var(--text-soft); font-style: italic; font-family: 'Cormorant Garamond', serif; margin-top: 4px; }
+
+  /* Supporter guidance (collapsed) */
+  .task-guidance {
+    background: rgba(122,140,110,0.06);
+    border: 1px solid rgba(122,140,110,0.14);
+    border-radius: 2px; padding: 10px 14px; margin-top: 10px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px; font-style: italic; color: var(--text-mid); line-height: 1.6;
+    display: none;
+  }
+  .task-card:not(.claimed):hover .task-guidance { display: block; }
+  .task-guidance-label { font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sea-moss); display: block; margin-bottom: 4px; font-style: normal; }
+
+  .btn-claim { padding: 10px 20px; background: transparent; color: var(--redwood); border: 1.5px solid var(--redwood); border-radius: 2px; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
+  .btn-claim:hover { background: var(--redwood); color: white; }
+
+  .claimed-badge { padding: 7px 14px; background: rgba(122,140,110,0.1); color: var(--sea-moss); border-radius: 2px; font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap; }
+
+  .view-wishlist-btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 26px; background: transparent; border: 1.5px solid var(--sea-moss); color: var(--sea-moss); font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; border-radius: 2px; transition: all 0.25s; }
+  .view-wishlist-btn:hover { background: var(--sea-moss); color: white; }
+
+  /* ===================== CLAIM MODAL ===================== */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(46,32,24,0.45); backdrop-filter: blur(5px); z-index: 500; align-items: center; justify-content: center; padding: 24px; }
+  .modal-overlay.visible { display: flex; }
+
+  .modal { background: var(--cream); border-radius: 3px; padding: 40px; max-width: 460px; width: 100%; box-shadow: 0 20px 60px rgba(46,32,24,0.18); animation: fadeUp 0.3s ease; }
+  .modal-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; color: var(--redwood); margin-bottom: 10px; }
+  .modal-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 400; color: var(--bark); margin-bottom: 6px; line-height: 1.15; }
+  .modal-subtitle { font-size: 12px; font-weight: 300; color: var(--text-mid); margin-bottom: 18px; line-height: 1.7; }
+  .modal-task-name { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-style: italic; color: var(--sea-moss); background: rgba(122,140,110,0.08); padding: 10px 14px; border-radius: 2px; margin-bottom: 8px; border-left: 2px solid var(--sea-moss); }
+
+  /* Supporter guidance in modal */
+  .modal-guidance {
+    background: rgba(139,74,47,0.05); border-left: 2px solid var(--redwood);
+    padding: 12px 14px; border-radius: 0 2px 2px 0; margin-bottom: 20px;
+    font-family: 'Cormorant Garamond', serif; font-size: 14px; font-style: italic;
+    color: var(--text-mid); line-height: 1.65;
+  }
+  .modal-guidance-label { font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--redwood); display: block; margin-bottom: 5px; font-style: normal; }
+
+  .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+  .btn-modal-cancel { flex: 1; padding: 13px; background: transparent; border: 1px solid var(--vintage-dark); color: var(--text-soft); font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; border-radius: 2px; transition: all 0.2s; }
+  .btn-modal-cancel:hover { border-color: var(--sea-moss); color: var(--sea-moss); }
+  .btn-modal-confirm { flex: 2; padding: 13px; background: var(--redwood); color: white; border: none; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; border-radius: 2px; transition: all 0.25s; }
+  .btn-modal-confirm:hover { background: var(--redwood-light); }
+
+  /* ===================== SUCCESS / CAL ===================== */
+  #success-screen { background: linear-gradient(155deg, #edf2ec 0%, #e4ddd0 100%); }
+  .success-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 24px; max-width: 480px; margin: 0 auto; width: 100%; }
+  .success-heart { font-size: 40px; color: var(--redwood); margin-bottom: 24px; animation: pulse 2.5s ease infinite; }
+  .success-title { font-family: 'Cormorant Garamond', serif; font-size: 46px; font-weight: 300; color: var(--bark); margin-bottom: 10px; line-height: 1.1; }
+  .success-title em { font-style: italic; color: var(--sea-moss); }
+  .success-rule { width: 36px; height: 2px; background: var(--redwood); margin: 0 auto 24px; }
+  .success-sub { font-size: 13px; font-weight: 300; color: var(--text-mid); line-height: 1.8; margin-bottom: 32px; }
+
+  .cal-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 14px 28px; background: rgba(255,255,255,0.7);
+    border: 1.5px solid rgba(122,140,110,0.3); border-radius: 2px;
+    font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--sea-moss);
+    cursor: pointer; transition: all 0.25s; margin-bottom: 12px; width: 100%; max-width: 300px;
+  }
+  .cal-btn:hover { background: var(--sea-moss); color: white; border-color: var(--sea-moss); }
+
+  /* ===================== FEEDBACK SCREENS ===================== */
+  #feedback-griever, #feedback-supporter {
+    background: linear-gradient(160deg, #eef2ec 0%, #e8e0d0 100%);
+  }
+  .feedback-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 24px; max-width: 500px; margin: 0 auto; width: 100%; }
+  .feedback-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: var(--redwood); margin-bottom: 14px; }
+  .feedback-title { font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 300; color: var(--bark); margin-bottom: 10px; line-height: 1.15; }
+  .feedback-title em { font-style: italic; color: var(--sea-moss); }
+  .feedback-sub { font-size: 13px; font-weight: 300; color: var(--text-mid); line-height: 1.75; margin-bottom: 32px; max-width: 380px; }
+
+  .feedback-options { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; }
+  .feedback-btn {
+    padding: 13px 22px;
+    background: rgba(255,255,255,0.6); border: 1.5px solid rgba(122,140,110,0.22);
+    border-radius: 2px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 400;
+    color: var(--bark); cursor: pointer; transition: all 0.2s ease;
+  }
+  .feedback-btn:hover, .feedback-btn.selected { background: var(--sea-moss); color: white; border-color: var(--sea-moss); }
+  .feedback-btn.redwood-select:hover, .feedback-btn.redwood-select.selected { background: var(--redwood); border-color: var(--redwood); }
+
+  .btn-skip { background: none; border: none; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 300; color: var(--text-soft); cursor: pointer; letter-spacing: 0.06em; text-decoration: underline; text-underline-offset: 3px; transition: color 0.2s; }
+  .btn-skip:hover { color: var(--bark); }
+
+  /* ===================== DASHBOARD ===================== */
+  #dashboard { background: linear-gradient(160deg, #eef2ec 0%, #e8e0d0 100%); }
+  .dashboard-content { flex: 1; max-width: 720px; margin: 0 auto; padding: 0 24px 80px; width: 100%; }
+  .dashboard-header { margin-bottom: 32px; }
+  .dashboard-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: var(--redwood); margin-bottom: 10px; }
+  .dashboard-title { font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 300; color: var(--bark); margin-bottom: 6px; line-height: 1.1; }
+  .dashboard-title em { font-style: italic; color: var(--sea-moss); }
+  .dashboard-sub { font-size: 13px; font-weight: 300; color: var(--text-mid); }
+
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 32px; }
+  .stat-card { background: rgba(255,255,255,0.58); border: 1px solid rgba(255,255,255,0.85); border-radius: 3px; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(46,32,24,0.04); }
+  .stat-number { font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 300; color: var(--redwood); line-height: 1; margin-bottom: 6px; }
+  .stat-label { font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-soft); }
+
+  .dashboard-section-title { font-size: 10px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--sea-moss); margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(122,140,110,0.18); }
+
+  .dashboard-task { background: rgba(255,255,255,0.52); border: 1px solid rgba(255,255,255,0.8); border-radius: 3px; padding: 14px 18px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-shadow: 0 1px 6px rgba(46,32,24,0.03); }
+  .dashboard-task-name { font-size: 13px; font-weight: 600; color: var(--bark); }
+  .dashboard-task-meta { font-size: 11px; font-weight: 300; color: var(--text-soft); margin-top: 2px; }
+
+  .status-pill { padding: 5px 12px; border-radius: 20px; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+  .status-open { background: rgba(122,140,110,0.1); color: var(--sea-moss); }
+  .status-claimed { background: rgba(74,124,126,0.1); color: var(--deep-dive); }
+  .status-done { background: rgba(139,74,47,0.1); color: var(--redwood); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+
+  /* MOBILE */
+  @media (max-width: 700px) {
+    .wishlist-layout { grid-template-columns: 1fr; }
+    .wishlist-sidebar { position: static; margin-top: 24px; }
+    .task-categories { padding-right: 0; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .form-card { padding: 32px 22px; }
+    .modal { padding: 28px 22px; }
+    .detail-row { grid-template-columns: 1fr; }
+  }
+
+  /* TOOLTIP */
+  .tooltip-wrapper { position: relative; display: inline-flex; align-items: center; }
+  .tooltip-icon { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; border-radius: 50%; background: rgba(122,140,110,0.18); color: var(--sea-moss); font-size: 9px; font-weight: 700; cursor: help; margin-left: 6px; }
+  .tooltip-text { position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%); background: var(--bark); color: var(--cream); padding: 8px 12px; border-radius: 2px; font-size: 11px; font-weight: 300; line-height: 1.5; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 10; }
+  .tooltip-wrapper:hover .tooltip-text { opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- ==================== LANDING ==================== -->
+<div id="landing" class="screen active">
+  <nav class="nav">
+    <span class="nav-heart">♡</span>
+    <span class="nav-logo">Ever<span>More</span></span>
+  </nav>
+  <div class="landing-content">
+    <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+    <p class="landing-eyebrow">Grief support, made real</p>
+    <h1 class="landing-headline">You don't have to<br><em>grieve alone.</em></h1>
+    <div class="landing-rule"></div>
+    <p class="landing-sub">When loss feels overwhelming, let your community show up for you. Create a simple wishlist of support, and let love find its way to your door.</p>
+    <div class="landing-ctas">
+      <button class="btn-primary" onclick="goTo('onboarding')">Create Your Support List →</button>
+      <button class="btn-secondary" onclick="goToSupporterView()">Help Someone Grieving</button>
+    </div>
+    <p class="landing-quote">Love is the point.</p>
+  </div>
+</div>
+
+<!-- ==================== ONBOARDING ==================== -->
+<div id="onboarding" class="screen">
+  <nav class="nav"><span class="nav-heart">♡</span><span class="nav-logo">Ever<span>More</span></span></nav>
+  <div class="onboarding-container">
+    <div class="step-indicator">
+      <div class="step-dot active" id="dot-1"></div>
+      <div class="step-dot" id="dot-2"></div>
+      <div class="step-dot" id="dot-3"></div>
+      <div class="step-dot" id="dot-4"></div>
+    </div>
+    <div class="form-card">
+
+      <!-- Step 1: Basics -->
+      <div class="form-step active" id="step-1">
+        <h2 class="form-title">Let's start with the basics.</h2>
+        <p class="form-subtitle">We'll keep this simple and gentle.</p>
+        <div class="field-group">
+          <label class="field-label">Your name <span>*</span></label>
+          <input class="field-input" id="f-name" type="text" placeholder="How would you like us to address you?">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Email address <span>*</span></label>
+          <input class="field-input" id="f-email" type="email" placeholder="We'll send a confirmation link">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Pronouns <span>*</span></label>
+          <input class="field-input" id="f-pronouns" type="text" placeholder="she/her, he/him, they/them, etc.">
+        </div>
+        <div class="form-nav">
+          <button class="btn-back" onclick="goTo('landing')">← Back</button>
+          <button class="btn-continue" onclick="nextStep(2)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Situation (dual-purpose: data + supports guidance copy) -->
+      <div class="form-step" id="step-2">
+        <h2 class="form-title">Tell us a little about your loss.</h2>
+        <p class="form-subtitle">This helps us shape the right support for you — and for whoever shows up.</p>
+        <div class="field-group">
+          <label class="field-label">City / Town <span>*</span></label>
+          <input class="field-input" id="f-city" type="text" placeholder="Where are you located?">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Who did you lose? <span>*</span></label>
+          <input class="field-input" id="f-relation" type="text" placeholder="e.g. My mother, My partner, My best friend">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Your role in handling logistics <span>*</span></label>
+          <select class="field-select" id="f-role">
+            <option value="" disabled selected>How involved are you in logistics?</option>
+            <option value="primary">Primary — I'm handling most of it</option>
+            <option value="partial">Shared — it's split with others</option>
+            <option value="minimal">Minimal — others are leading</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">How are you feeling right now? <span style="font-weight:300; text-transform:none; letter-spacing:0; font-size:10px;">(optional)</span></label>
+          <select class="field-select" id="f-feeling">
+            <option value="">You don't have to answer this one</option>
+            <option value="overwhelmed">Overwhelmed — there's too much to do</option>
+            <option value="numb">Numb — going through the motions</option>
+            <option value="supported">Supported, but still need help</option>
+            <option value="isolated">Isolated — I don't know who to ask</option>
+            <option value="okay">Okay, just want to plan ahead</option>
+          </select>
+        </div>
+        <div class="form-nav">
+          <button class="btn-back" onclick="nextStep(1)">← Back</button>
+          <button class="btn-continue" onclick="nextStep(3)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Research (honest framing) -->
+      <div class="form-step" id="step-3">
+        <h2 class="form-title">One last thing. <span class="optional-badge">Optional</span></h2>
+        <p class="form-subtitle">Share only what feels comfortable.</p>
+        <div class="data-note">
+          <strong>Why we're asking:</strong> These questions help us understand who EverMore is serving so we can build better for everyone. Your answers won't appear on your wishlist — they're for us to learn from.
+        </div>
+        <div class="field-group">
+          <label class="field-label">Age</label>
+          <input class="field-input" id="f-age" type="text" placeholder="e.g. 34">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Race / Ethnicity</label>
+          <input class="field-input" id="f-race" type="text" placeholder="e.g. Black / African American, Latina, Asian, etc.">
+        </div>
+        <div class="onboarding-fwd">Almost there — one more step before your wishlist.</div>
+        <div class="form-nav">
+          <button class="btn-back" onclick="nextStep(2)">← Back</button>
+          <button class="btn-continue" onclick="nextStep(4)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Notes for supporters -->
+      <div class="form-step" id="step-4">
+        <h2 class="form-title">Help your supporters show up right.</h2>
+        <p class="form-subtitle">Write this once — we'll share it with every supporter who claims a task, so you never have to repeat yourself.</p>
+
+        <div class="data-note" style="border-color: var(--sea-moss); background: rgba(122,140,110,0.05);">
+          Think of this as your supporter briefing. The more you share here, the less explaining you'll need to do later.
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Allergies or dietary needs <span style="font-weight:300; text-transform:none; letter-spacing:0; font-size:10px;">(optional)</span></label>
+          <input class="field-input" id="f-allergies" type="text" placeholder="e.g. Nut allergy in the house, gluten-free, vegetarian">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Pets at home <span style="font-weight:300; text-transform:none; letter-spacing:0; font-size:10px;">(optional)</span></label>
+          <input class="field-input" id="f-pets" type="text" placeholder="e.g. Two friendly dogs. Cat hides. Side gate is unlocked.">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Home access <span style="font-weight:300; text-transform:none; letter-spacing:0; font-size:10px;">(optional)</span></label>
+          <input class="field-input" id="f-access" type="text" placeholder="e.g. Leave bags on porch, gate code 4421, side door">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Anything else your supporters should know <span style="font-weight:300; text-transform:none; letter-spacing:0; font-size:10px;">(optional)</span></label>
+          <textarea class="field-textarea" id="f-notes" placeholder="e.g. Kids are home after 3pm. I might not answer the door — that's okay. Knock twice and leave it. No need to linger unless I invite you in."></textarea>
+        </div>
+
+        <div class="form-nav">
+          <button class="btn-back" onclick="nextStep(3)">← Back</button>
+          <button class="btn-continue" onclick="completeOnboarding()">Create My Wishlist →</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ==================== WISHLIST BUILDER ==================== -->
+<div id="wishlist-builder" class="screen">
+  <nav class="nav"><span class="nav-heart">♡</span><span class="nav-logo">Ever<span>More</span></span></nav>
+  <div class="wishlist-header">
+    <h2 class="wishlist-greeting">Build your list, <em id="greeting-name">friend</em>.</h2>
+    <p class="wishlist-desc">Choose what you need. We'll handle the explaining — every task comes with a pre-written note so your supporters know exactly how to show up.</p>
+  </div>
+  <div class="wishlist-layout">
+    <div class="task-categories">
+
+      <!-- Smart detail panel (appears on chip click) -->
+      <div class="task-detail-panel" id="active-detail-panel">
+        <div class="panel-header">
+          <p class="panel-task-name" id="active-task-label">Task name</p>
+          <p class="panel-prefill-note">We've pre-written a note for your supporter. <strong>Edit or keep as-is.</strong></p>
+        </div>
+        <div class="supporter-script">
+          <span class="supporter-script-label">What we'll tell your supporter</span>
+          <span id="supporter-script-text">Here's what to say when you show up...</span>
+        </div>
+        <div class="detail-row">
+          <div class="detail-field">
+            <label>Date <span style="font-weight:300; text-transform:none; letter-spacing:0;">(optional)</span></label>
+            <input type="date" id="detail-date">
+          </div>
+          <div class="detail-field">
+            <label>Time of day</label>
+            <select id="detail-time">
+              <option value="">Flexible</option>
+              <option value="Morning">Morning</option>
+              <option value="Afternoon">Afternoon</option>
+              <option value="Evening">Evening</option>
+              <option value="Anytime this week">Anytime this week</option>
+            </select>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-field">
+            <label>Delivery method</label>
+            <select id="detail-delivery">
+              <option value="">Any</option>
+              <option value="Drop-off">Drop-off</option>
+              <option value="In-person">In-person</option>
+              <option value="Virtual">Virtual</option>
+            </select>
+          </div>
+          <div class="detail-field">
+            <label>Address / Link <span style="font-weight:300; text-transform:none; letter-spacing:0;">(opt.)</span></label>
+            <input type="text" id="detail-location" placeholder="Home address or Zoom link">
+          </div>
+        </div>
+        <div class="panel-actions">
+          <button class="btn-save-detail" onclick="saveTaskDetail()">Add to My List →</button>
+          <button class="btn-skip-detail" onclick="cancelDetail()">Add without details</button>
+        </div>
+      </div>
+
+      <div class="category-section">
+        <div class="category-title">🍲 Meals & Food</div>
+        <div class="task-chips">
+          <div class="task-chip" onclick="toggleChip(this,'Bring dinner for the family','Meals & Food')"><span class="chip-icon">+</span> Bring dinner for the family</div>
+          <div class="task-chip" onclick="toggleChip(this,'Drop off breakfast pastries','Meals & Food')"><span class="chip-icon">+</span> Drop off breakfast pastries</div>
+          <div class="task-chip" onclick="toggleChip(this,'Organize a meal train','Meals & Food')"><span class="chip-icon">+</span> Organize a meal train</div>
+          <div class="task-chip" onclick="toggleChip(this,'Grocery shopping','Meals & Food')"><span class="chip-icon">+</span> Grocery shopping</div>
+          <div class="task-chip" onclick="toggleChip(this,'Prepare freezer meals','Meals & Food')"><span class="chip-icon">+</span> Prepare freezer meals</div>
+        </div>
+      </div>
+
+      <div class="category-section">
+        <div class="category-title">🏠 Practical Help</div>
+        <div class="task-chips">
+          <div class="task-chip" onclick="toggleChip(this,'Light housekeeping','Practical Help')"><span class="chip-icon">+</span> Light housekeeping</div>
+          <div class="task-chip" onclick="toggleChip(this,'Laundry assistance','Practical Help')"><span class="chip-icon">+</span> Laundry assistance</div>
+          <div class="task-chip" onclick="toggleChip(this,'Pet care / walking','Practical Help')"><span class="chip-icon">+</span> Pet care / walking</div>
+          <div class="task-chip" onclick="toggleChip(this,'Childcare support','Practical Help')"><span class="chip-icon">+</span> Childcare support</div>
+          <div class="task-chip" onclick="toggleChip(this,'Yard work','Practical Help')"><span class="chip-icon">+</span> Yard work</div>
+        </div>
+      </div>
+
+      <div class="category-section">
+        <div class="category-title">🚗 Transportation</div>
+        <div class="task-chips">
+          <div class="task-chip" onclick="toggleChip(this,'Airport pickup / dropoff','Transportation')"><span class="chip-icon">+</span> Airport pickup / dropoff</div>
+          <div class="task-chip" onclick="toggleChip(this,'Drive to appointments','Transportation')"><span class="chip-icon">+</span> Drive to appointments</div>
+          <div class="task-chip" onclick="toggleChip(this,'Help with errands','Transportation')"><span class="chip-icon">+</span> Help with errands</div>
+          <div class="task-chip" onclick="toggleChip(this,'School pickup for kids','Transportation')"><span class="chip-icon">+</span> School pickup for kids</div>
+        </div>
+      </div>
+
+      <div class="category-section">
+        <div class="category-title">📋 Administrative</div>
+        <div class="task-chips">
+          <div class="task-chip" onclick="toggleChip(this,'Help with paperwork','Administrative')"><span class="chip-icon">+</span> Help with paperwork</div>
+          <div class="task-chip" onclick="toggleChip(this,'Make phone calls','Administrative')"><span class="chip-icon">+</span> Make phone calls</div>
+          <div class="task-chip" onclick="toggleChip(this,'Research services','Administrative')"><span class="chip-icon">+</span> Research services</div>
+          <div class="task-chip" onclick="toggleChip(this,'Coordinate with others','Administrative')"><span class="chip-icon">+</span> Coordinate with others</div>
+        </div>
+      </div>
+
+      <div class="category-section">
+        <div class="category-title">♡ Emotional Support</div>
+        <div class="task-chips">
+          <div class="task-chip" onclick="toggleChip(this,'Just sit and listen','Emotional Support')"><span class="chip-icon">+</span> Just sit and listen</div>
+          <div class="task-chip" onclick="toggleChip(this,'Take a walk together','Emotional Support')"><span class="chip-icon">+</span> Take a walk together</div>
+          <div class="task-chip" onclick="toggleChip(this,'Virtual check-in call','Emotional Support')"><span class="chip-icon">+</span> Virtual check-in call</div>
+          <div class="task-chip" onclick="toggleChip(this,'Send encouraging notes','Emotional Support')"><span class="chip-icon">+</span> Send encouraging notes</div>
+        </div>
+      </div>
+
+      <div class="add-custom" onclick="showCustomInput()">
+        <span style="font-size:18px; color:var(--redwood);">+</span>
+        <span style="font-size:12px; font-weight:600; color:var(--redwood);">Add a custom request</span>
+        <div class="tooltip-wrapper">
+          <span class="tooltip-icon">?</span>
+          <span class="tooltip-text">Need help wording it? We've got language you can copy.</span>
+        </div>
+      </div>
+      <div class="custom-input-row" id="custom-input-row">
+        <div class="custom-input-top">
+          <input type="text" id="custom-task-input" placeholder="Describe what would help right now...">
+          <button class="btn-add-task" onclick="addCustomTask()">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="wishlist-sidebar">
+      <h3 class="sidebar-title">Your Support List</h3>
+      <p class="sidebar-count" id="sidebar-count">0 items selected</p>
+      <div class="selected-tasks" id="selected-tasks">
+        <p class="sidebar-empty">"Asking for help<br>is an act of love."</p>
+      </div>
+      <button class="btn-generate" id="generate-btn" onclick="generateWishlist()" disabled>Generate My Wishlist →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== WISHLIST PAGE ==================== -->
+<div id="wishlist-page" class="screen">
+  <nav class="nav"><span class="nav-heart">♡</span><span class="nav-logo">Ever<span>More</span></span></nav>
+  <div class="wishlist-page-content">
+    <div class="supporter-banner">
+      <p>You're here because someone you care about is grieving.<br>Here's how to help — choose a task, and show up with confidence.</p>
+    </div>
+    <h2 class="wishlist-page-title"><em id="wishlist-owner-name">Fanny</em>'s Support Wishlist</h2>
+    <p class="wishlist-page-sub" id="wishlist-page-sub">These are the ways people can help right now. Hover a task to see how to show up.</p>
+    <div class="share-bar">
+      <input class="share-link" id="share-link-input" type="text" value="evermore.app/support/fanny-jones-2024" readonly>
+      <button class="btn-copy" id="copy-btn" onclick="copyLink()">Copy Link</button>
+    </div>
+    <div class="task-cards" id="task-cards-list"></div>
+    <button class="view-wishlist-btn" onclick="goTo('dashboard')">♡ View My Dashboard</button>
+  </div>
+</div>
+
+<!-- ==================== CLAIM MODAL ==================== -->
+<div class="modal-overlay" id="claim-modal">
+  <div class="modal">
+    <p class="modal-eyebrow">You're showing up</p>
+    <h3 class="modal-title">I want to help.</h3>
+    <p class="modal-subtitle">Your name will be visible to the person grieving. We'll send you a confirmation and a gentle reminder before your task.</p>
+    <div class="modal-task-name" id="modal-task-name"></div>
+    <div class="modal-guidance">
+      <span class="modal-guidance-label">How to show up well</span>
+      <span id="modal-guidance-text">Your presence matters more than perfection. Just being there is enough.</span>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Your name <span>*</span></label>
+      <input class="field-input" id="claimer-name" type="text" placeholder="How should we address you?">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Your email <span>*</span></label>
+      <input class="field-input" id="claimer-email" type="email" placeholder="For your confirmation and reminder">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-modal-confirm" onclick="confirmClaim()">Claim This Task →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SUCCESS + CALENDAR ==================== -->
+<div id="success-screen" class="screen">
+  <nav class="nav"><span class="nav-heart">♡</span><span class="nav-logo">Ever<span>More</span></span></nav>
+  <div class="success-content">
+    <div class="success-heart">♡</div>
+    <h2 class="success-title">You're in.<br><em>Thank you.</em></h2>
+    <div class="success-rule"></div>
+    <p class="success-sub" id="success-message">A confirmation has been sent to your email. We'll send a gentle reminder the day before your task.</p>
+    <button class="cal-btn" onclick="addToCalendar()">
+      📅 Add to My Calendar
+    </button>
+    <br>
+    <button class="btn-primary" onclick="goTo('feedback-supporter')" style="margin-top:8px;">Continue →</button>
+  </div>
+</div>
+
+<!-- ==================== FEEDBACK: SUPPORTER ==================== -->
+<div id="feedback-supporter" class="screen">
+  <nav class="nav"><span class="nav-heart">♡</span><span class="nav-logo">Ever<span>More</span></span></nav>
+  <div class="feedback-content">
+    <p class="feedback-eyebrow">One moment</p>
+    <h2 class="feedback-title">How does it feel<br><em>to show up?</em></h2>
+    <p class="feedback-sub">You don't have to explain. We're learning what makes it easier for people to be there for each other — and your honest answer helps.</p>
+    <div class="feedback-options">
+      <button class="feedback-btn" onclick="selectFeedback(this,'supporter','meaningful')">Meaningful</button>
+      <button class="feedback-btn" onclick="selectFeedback(this,'supporter','uncertain')">A little uncertain</button>
+      <button class="feedback-btn" onclick="selectFeedback(this,'supporter','nervous')">Nervous but here</button>
+      <button class="feedback-btn redwood-select" onclick="selectFeedback(this,'supporter','unsure')">Not sure yet</button>
+    </div>
+    <button class="btn-skip" onclick="goTo('wishlist-page')">Skip for now</button>
+  </div>
+</div>
+
+<!-- ==================== FEEDBACK: GRIEVER (post-fulfillment) ==================== -->
+<div id="feedback-griever" class="screen">
+  <nav class="nav"><span class="nav-heart">♡</span><span class="nav-logo">Ever<span>More</span></span></nav>
+  <div class="feedback-content">
+    <p class="feedback-eyebrow">One quick question</p>
+    <h2 class="feedback-title">Was this support<br><em>helpful?</em></h2>
+    <p class="feedback-sub">No explanation needed. Just let us know — your answer helps us build something better for everyone who comes after you.</p>
+    <div class="feedback-options">
+      <button class="feedback-btn" onclick="selectFeedback(this,'griever','yes')">Yes, it helped</button>
+      <button class="feedback-btn" onclick="selectFeedback(this,'griever','somewhat')">Somewhat</button>
+      <button class="feedback-btn redwood-select" onclick="selectFeedback(this,'griever','no')">Not really</button>
+    </div>
+    <button class="btn-skip" onclick="goTo('dashboard')">Skip for now</button>
+  </div>
+</div>
+
+<!-- ==================== DASHBOARD ==================== -->
+<div id="dashboard" class="screen">
+  <nav class="nav"><span class="nav-heart">♡</span><span class="nav-logo">Ever<span>More</span></span></nav>
+  <div class="dashboard-content">
+    <div class="dashboard-header">
+      <p class="dashboard-eyebrow">Your EverMore</p>
+      <h2 class="dashboard-title">Your support,<br><em>at a glance.</em></h2>
+      <p class="dashboard-sub">Here's how your community is showing up for you.</p>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-number" id="stat-total">0</div><div class="stat-label">Tasks Created</div></div>
+      <div class="stat-card"><div class="stat-number" id="stat-claimed">0</div><div class="stat-label">Claimed</div></div>
+      <div class="stat-card"><div class="stat-number" id="stat-open">0</div><div class="stat-label">Still Open</div></div>
+    </div>
+    <div class="dashboard-section-title">All Tasks</div>
+    <div id="dashboard-tasks"></div>
+    <button class="view-wishlist-btn" style="margin-top:20px;" onclick="goTo('wishlist-page')">♡ View & Share Your Wishlist</button>
+  </div>
+</div>
+
+<script>
+  // ---- Smart supporter scripts per task ----
+  const supporterScripts = {
+    'Bring dinner for the family': "You don't need to stay — just drop it off and send a text saying you're thinking of them. Something warm and easy to reheat is perfect. No need to knock if they'd rather rest.",
+    'Drop off breakfast pastries': "Leave it at the door with a short note. You don't need words — your showing up says it all.",
+    'Organize a meal train': "You'll coordinate with a few others to make sure meals arrive on different days. A simple group text or a free tool like MealTrain.com can help you manage it.",
+    'Grocery shopping': "Ask for a list or offer to grab the basics: bread, milk, easy snacks, and anything they specifically need. Drop off without requiring a conversation.",
+    'Prepare freezer meals': "Soups, casseroles, and pasta dishes freeze well. Label everything with the date and reheating instructions. No need to cook together unless they want that.",
+    'Light housekeeping': "Focus on dishes, surfaces, trash, and laundry if visible. Don't reorganize — just restore order. Check in quietly when you arrive and let them know you're there.",
+    'Laundry assistance': "Wash, fold, and return — or ask if they'd like you to put things away. Keep it simple and don't ask questions about what you find.",
+    'Pet care / walking': "A daily walk or feeding visit takes real weight off. Be consistent and reliable — this is one of the most grounding things you can do.",
+    'Childcare support': "Show up, engage the kids, and take them out if possible so the adult can rest. You don't need to talk about what's happening — just be present with the children.",
+    'Yard work': "Mow, rake, or tidy whatever's most visible. A cared-for exterior communicates that others are holding the space.",
+    'Airport pickup / dropoff': "Be on time, have the address ready, and keep conversation light unless they want to talk. Silence is a gift too.",
+    'Drive to appointments': "Offer to wait. Even if they say no, knowing someone is there changes the experience of hard appointments.",
+    'Help with errands': "Offer a list or just ask: 'Can I grab anything while I'm out?' Small asks are easier to say yes to.",
+    'School pickup for kids': "Confirm the plan the night before. Have a snack for the kids if you can — it signals care without requiring anything from the parent.",
+    'Help with paperwork': "Offer to sit with them, not do it for them. Sometimes having a witness to the hard administrative work is what matters most.",
+    'Make phone calls': "Ask for a list of who to call and what to say. You can draft a script together. This is one of the most exhausting tasks — and you can carry it.",
+    'Research services': "Ask what they need help finding — funeral services, grief counselors, legal help. Return with 2–3 concrete options, not a dump of links.",
+    'Coordinate with others': "Be the point of contact so they don't have to repeat their story. Keep updates brief and protective of their privacy.",
+    'Just sit and listen': "You don't need to fix anything. Ask: 'Do you want advice or do you just need me to listen?' Then honor what they say.",
+    'Take a walk together': "Fresh air and movement help. Keep the pace easy and follow their lead on conversation. Silence on a walk is natural.",
+    'Virtual check-in call': "Keep it short unless they want to talk longer. Lead with: 'I just wanted to check in — no pressure to talk.' Then listen.",
+    'Send encouraging notes': "Handwritten if you can. Don't say 'let me know if you need anything' — instead, say 'I'm thinking of you and I'm here.'"
+  };
+
+  const state = {
+    user: { name: '' },
+    selectedTasks: [],
+    currentClaimTaskId: null,
+    pendingTask: null,
+  };
+
+  function goTo(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function goToSupporterView() {
+    if (state.selectedTasks.length === 0) {
+      state.selectedTasks = [
+        { id: 1, name: 'Bring dinner for the family', category: 'Meals & Food', status: 'open', claimedBy: null, date: 'Mar 20', timeOfDay: 'Evening', delivery: 'Drop-off', location: '142 Oak Street' },
+        { id: 2, name: 'Light housekeeping', category: 'Practical Help', status: 'claimed', claimedBy: 'Maria', date: 'Mar 15', timeOfDay: 'Morning', delivery: 'In-person', location: '' },
+        { id: 3, name: 'Just sit and listen', category: 'Emotional Support', status: 'open', claimedBy: null, date: '', timeOfDay: 'Flexible', delivery: 'In-person', location: '' },
+        { id: 4, name: 'Drive to appointments', category: 'Transportation', status: 'open', claimedBy: null, date: 'Mar 22', timeOfDay: 'Afternoon', delivery: 'In-person', location: '' },
+      ];
+      document.getElementById('wishlist-owner-name').textContent = 'Fanny';
+    }
+    renderWishlistPage();
+    goTo('wishlist-page');
+  }
+
+  // ---- Onboarding ----
+  let currentStep = 1;
+  function nextStep(step) {
+    if (step > currentStep && currentStep === 1) {
+      if (!document.getElementById('f-name').value.trim()) {
+        const el = document.getElementById('f-name');
+        el.style.borderColor = 'var(--redwood)';
+        el.focus();
+        setTimeout(() => el.style.borderColor = '', 2000);
+        return;
+      }
+    }
+    document.getElementById(`step-${currentStep}`).classList.remove('active');
+    document.getElementById(`dot-${currentStep}`).classList.remove('active');
+    document.getElementById(`dot-${currentStep}`).classList.add('done');
+    currentStep = step;
+    document.getElementById(`step-${step}`).classList.add('active');
+    document.getElementById(`dot-${step}`).classList.add('active');
+  }
+
+  function completeOnboarding() {
+    const name = document.getElementById('f-name').value.trim() || 'friend';
+    state.user.name = name;
+    state.user.allergies = document.getElementById('f-allergies') ? document.getElementById('f-allergies').value.trim() : '';
+    state.user.pets = document.getElementById('f-pets') ? document.getElementById('f-pets').value.trim() : '';
+    state.user.access = document.getElementById('f-access') ? document.getElementById('f-access').value.trim() : '';
+    state.user.notes = document.getElementById('f-notes') ? document.getElementById('f-notes').value.trim() : '';
+    document.getElementById('greeting-name').textContent = name.split(' ')[0];
+    goTo('wishlist-builder');
+  }
+
+  // ---- Wishlist Builder ----
+  function toggleChip(el, taskName, category) {
+    if (el.classList.contains('selected')) {
+      el.classList.remove('selected');
+      el.querySelector('.chip-icon').textContent = '+';
+      state.selectedTasks = state.selectedTasks.filter(t => t.name !== taskName);
+      document.getElementById('active-detail-panel').classList.remove('visible');
+      renderSidebar();
+      return;
+    }
+    el.classList.add('selected');
+    el.querySelector('.chip-icon').textContent = '✓';
+    state.pendingTask = { name: taskName, category, el };
+    // Populate panel
+    document.getElementById('active-task-label').textContent = taskName;
+    const script = supporterScripts[taskName] || "Show up with kindness. Your presence matters more than perfection.";
+    document.getElementById('supporter-script-text').textContent = script;
+    document.getElementById('detail-date').value = '';
+    document.getElementById('detail-time').value = '';
+    document.getElementById('detail-delivery').value = '';
+    document.getElementById('detail-location').value = '';
+    const panel = document.getElementById('active-detail-panel');
+    panel.classList.add('visible');
+    setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+  }
+
+  function saveTaskDetail() {
+    if (!state.pendingTask) return;
+    const date = document.getElementById('detail-date').value;
+    let dateLabel = '';
+    if (date) { const d = new Date(date + 'T12:00:00'); dateLabel = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }
+    state.selectedTasks.push({
+      id: Date.now() + Math.random(),
+      name: state.pendingTask.name,
+      category: state.pendingTask.category,
+      status: 'open', claimedBy: null,
+      date: dateLabel,
+      timeOfDay: document.getElementById('detail-time').value || 'Flexible',
+      delivery: document.getElementById('detail-delivery').value || 'Any',
+      location: document.getElementById('detail-location').value,
+    });
+    document.getElementById('active-detail-panel').classList.remove('visible');
+    state.pendingTask = null;
+    renderSidebar();
+  }
+
+  function cancelDetail() {
+    if (!state.pendingTask) return;
+    state.selectedTasks.push({ id: Date.now() + Math.random(), name: state.pendingTask.name, category: state.pendingTask.category, status: 'open', claimedBy: null, date: '', timeOfDay: 'Flexible', delivery: 'Any', location: '' });
+    document.getElementById('active-detail-panel').classList.remove('visible');
+    state.pendingTask = null;
+    renderSidebar();
+  }
+
+  function showCustomInput() {
+    document.getElementById('custom-input-row').classList.add('visible');
+    document.getElementById('custom-task-input').focus();
+  }
+
+  function addCustomTask() {
+    const input = document.getElementById('custom-task-input');
+    const val = input.value.trim();
+    if (!val) return;
+    state.selectedTasks.push({ id: Date.now(), name: val, category: 'Custom', status: 'open', claimedBy: null, date: '', timeOfDay: 'Flexible', delivery: 'Any', location: '' });
+    input.value = '';
+    renderSidebar();
+  }
+
+  function removeTask(id) {
+    const task = state.selectedTasks.find(t => t.id == id);
+    if (task) {
+      document.querySelectorAll('.task-chip.selected').forEach(chip => {
+        if (chip.textContent.replace(/^[+✓]\s*/, '').trim() === task.name) {
+          chip.classList.remove('selected');
+          chip.querySelector('.chip-icon').textContent = '+';
+        }
+      });
+    }
+    state.selectedTasks = state.selectedTasks.filter(t => t.id != id);
+    renderSidebar();
+  }
+
+  function renderSidebar() {
+    const container = document.getElementById('selected-tasks');
+    const count = state.selectedTasks.length;
+    document.getElementById('sidebar-count').textContent = `${count} item${count !== 1 ? 's' : ''} selected`;
+    document.getElementById('generate-btn').disabled = count === 0;
+    if (count === 0) { container.innerHTML = `<p class="sidebar-empty">"Asking for help<br>is an act of love."</p>`; return; }
+    container.innerHTML = state.selectedTasks.map(t => `
+      <div class="selected-task-item">
+        <div class="selected-task-top">
+          <span class="selected-task-name">${t.name}</span>
+          <button class="remove-task" onclick="removeTask(${t.id})">×</button>
+        </div>
+        ${(t.date || (t.timeOfDay && t.timeOfDay !== 'Flexible')) ? `<div class="selected-task-meta">${[t.date, t.timeOfDay !== 'Flexible' ? t.timeOfDay : ''].filter(Boolean).join(' · ')}</div>` : ''}
+      </div>`).join('');
+  }
+
+  function generateWishlist() {
+    const name = state.user.name || 'Fanny Jones';
+    document.getElementById('wishlist-owner-name').textContent = name.split(' ')[0];
+    document.getElementById('wishlist-page-sub').textContent = `These are the ways people can help ${name.split(' ')[0]} right now. Hover a task to see how to show up.`;
+    renderWishlistPage();
+    goTo('wishlist-page');
+  }
+
+  // ---- Wishlist Page ----
+  function renderWishlistPage() {
+    const list = document.getElementById('task-cards-list');
+    list.innerHTML = state.selectedTasks.map(t => {
+      const script = supporterScripts[t.name] || "Show up with kindness. Your presence matters more than perfection.";
+      const timeMeta = [t.date, t.timeOfDay && t.timeOfDay !== 'Flexible' ? t.timeOfDay : '', t.delivery && t.delivery !== 'Any' ? t.delivery : '', t.location || ''].filter(Boolean).join(' · ');
+      return `
+      <div class="task-card ${t.status === 'claimed' ? 'claimed' : ''}">
+        <div class="task-card-top">
+          <div class="task-card-info">
+            <div class="task-card-name">${t.name}</div>
+            <div class="task-card-meta">
+              <span class="task-card-category">${t.category}</span>
+              ${timeMeta ? `<span class="task-card-time">${timeMeta}</span>` : ''}
+            </div>
+            ${t.claimedBy ? `<div class="task-claimed-by">Claimed by ${t.claimedBy}</div>` : ''}
+          </div>
+          ${t.status === 'open'
+            ? `<button class="btn-claim" onclick="openClaimModal(${t.id}, '${t.name.replace(/'/g,"\\'")}', '${script.replace(/'/g,"\\'")}')">Claim →</button>`
+            : `<span class="claimed-badge">✓ Claimed</span>`}
+        </div>
+        ${t.status === 'open' ? `<div class="task-guidance"><span class="task-guidance-label">How to show up</span>${script.substring(0, 120)}...</div>` : ''}
+      </div>`;
+    }).join('');
+    renderDashboard();
+  }
+
+  function copyLink() {
+    const btn = document.getElementById('copy-btn');
+    navigator.clipboard.writeText(document.getElementById('share-link-input').value).catch(() => {});
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy Link'; btn.classList.remove('copied'); }, 2200);
+  }
+
+  // ---- Claim Modal ----
+  function openClaimModal(taskId, taskName, guidance) {
+    state.currentClaimTaskId = taskId;
+    document.getElementById('modal-task-name').textContent = taskName;
+    // Build full guidance with supporter notes appended
+    let fullGuidance = guidance || "Your presence matters more than perfection. Just showing up is enough.";
+    const notes = [];
+    if (state.user.allergies) notes.push("🌿 Allergies/diet: " + state.user.allergies);
+    if (state.user.pets) notes.push("🐾 Pets: " + state.user.pets);
+    if (state.user.access) notes.push("🏠 Access: " + state.user.access);
+    if (state.user.notes) notes.push("📝 " + state.user.notes);
+    if (notes.length > 0) fullGuidance += "
+
+" + notes.join("
+");
+    document.getElementById('modal-guidance-text').style.whiteSpace = 'pre-line';
+    document.getElementById('modal-guidance-text').textContent = fullGuidance;
+    document.getElementById('claimer-name').value = '';
+    document.getElementById('claimer-email').value = '';
+    document.getElementById('claim-modal').classList.add('visible');
+  }
+
+  function closeModal() {
+    document.getElementById('claim-modal').classList.remove('visible');
+    state.currentClaimTaskId = null;
+  }
+
+  function confirmClaim() {
+    const name = document.getElementById('claimer-name').value.trim();
+    const email = document.getElementById('claimer-email').value.trim();
+    if (!name) { document.getElementById('claimer-name').focus(); return; }
+    if (!email) { document.getElementById('claimer-email').focus(); return; }
+    const task = state.selectedTasks.find(t => t.id == state.currentClaimTaskId);
+    if (task) { task.status = 'claimed'; task.claimedBy = name; state.lastClaimedTask = task; }
+    closeModal();
+    document.getElementById('success-message').textContent = `${name}, a confirmation is on its way. We'll send a gentle reminder the day before. Showing up matters — thank you.`;
+    goTo('success-screen');
+  }
+
+  // ---- Calendar ----
+  function addToCalendar() {
+    const task = state.lastClaimedTask;
+    if (!task) { alert("Calendar event ready — in the live version, this downloads a .ics file to your device."); return; }
+    const name = document.getElementById('claimer-name').value || 'Supporter';
+    alert(`📅 In the live version, this downloads a calendar invite for:\n\n"${task.name}"\n${task.date ? task.date + ' · ' : ''}${task.timeOfDay}\n\nIt includes the address and a pre-written note on how to show up.`);
+  }
+
+  // ---- Feedback ----
+  function selectFeedback(btn, type, val) {
+    btn.closest('.feedback-options').querySelectorAll('.feedback-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    setTimeout(() => goTo(type === 'supporter' ? 'wishlist-page' : 'dashboard'), 700);
+  }
+
+  // ---- Dashboard ----
+  function renderDashboard() {
+    const tasks = state.selectedTasks;
+    const claimed = tasks.filter(t => t.status === 'claimed').length;
+    const open = tasks.filter(t => t.status === 'open').length;
+    document.getElementById('stat-total').textContent = tasks.length;
+    document.getElementById('stat-claimed').textContent = claimed;
+    document.getElementById('stat-open').textContent = open;
+    document.getElementById('dashboard-tasks').innerHTML = tasks.map(t => `
+      <div class="dashboard-task">
+        <div>
+          <div class="dashboard-task-name">${t.name}</div>
+          <div class="dashboard-task-meta">${t.category}${t.date ? ' · ' + t.date : ''}${t.claimedBy ? ' · ' + t.claimedBy : ''}</div>
+        </div>
+        <span class="status-pill status-${t.status}">${t.status}</span>
+      </div>`).join('');
+  }
+
+  document.getElementById('claim-modal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Enter' && document.activeElement === document.getElementById('custom-task-input')) addCustomTask(); });
+</script>
+</body>
+</html>
