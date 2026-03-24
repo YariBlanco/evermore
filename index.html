@@ -1326,7 +1326,7 @@
             ${t.claimedBy ? `<div class="task-claimed-by">Claimed by ${t.claimedBy}</div>` : ''}
           </div>
           ${t.status === 'open'
-            ? `<button class="btn-claim" onclick="openClaimModal(${t.id}, '${t.name.replace(/'/g,"\\'")}', '${script.replace(/'/g,"\\'")}')">Claim →</button>`
+            ? `<button class="btn-claim" onclick="openClaimModal('${t.id}', '${t.name.replace(/'/g,"\\'")}', '${script.replace(/'/g,"\\'")}')">Claim →</button>`
             : `<span class="claimed-badge">✓ Claimed</span>`}
         </div>
         ${t.status === 'open' ? `<div class="task-guidance"><span class="task-guidance-label">How to show up</span>${script.substring(0, 120)}...</div>` : ''}
@@ -1345,7 +1345,7 @@
 
   // ---- Claim Modal ----
   function openClaimModal(taskId, taskName, guidance) {
-    state.currentClaimTaskId = taskId;
+    state.currentClaimTaskId = String(taskId);
     document.getElementById('modal-task-name').textContent = taskName;
     // Build full guidance with supporter notes appended
     let fullGuidance = guidance || "Your presence matters more than perfection. Just showing up is enough.";
@@ -1372,7 +1372,7 @@
     const email = document.getElementById('claimer-email').value.trim();
     if (!name) { document.getElementById('claimer-name').focus(); return; }
     if (!email) { document.getElementById('claimer-email').focus(); return; }
-    const task = state.selectedTasks.find(t => t.id == state.currentClaimTaskId);
+    const task = state.selectedTasks.find(t => String(t.id) === String(state.currentClaimTaskId));
     if (task) {
       task.status = 'claimed';
       task.claimedBy = name;
@@ -1498,7 +1498,7 @@
 
   // Called from griever dashboard when a task is claimed
   window.addClaimedTaskToCalendar = function(taskId) {
-    const task = state.selectedTasks.find(t => t.id == taskId);
+    const task = state.selectedTasks.find(t => String(t.id) === String(taskId));
     if (!task) return;
     const ics = generateICS(
       task.claimedBy + ' is helping: ' + task.name,
